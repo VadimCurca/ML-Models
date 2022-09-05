@@ -147,7 +147,7 @@ class ShuffleNet(nn.Module):
                  groups,
                  in_channels=3,
                  in_size=(224, 224),
-                 num_classes=10):
+                 num_classes=1000):
         super(ShuffleNet, self).__init__()
         self.in_size = in_size
         self.num_classes = num_classes
@@ -459,22 +459,22 @@ def _test():
         weight_count = _calc_width(net)
         print("m={}, {}".format(model.__name__, weight_count))
 
-        assert (model != shufflenet_g1_w1 or weight_count == 960706)
-        assert (model != shufflenet_g2_w1 or weight_count == 940858)
-        assert (model != shufflenet_g3_w1 or weight_count == 914338)
-        assert (model != shufflenet_g4_w1 or weight_count == 890234)
-        assert (model != shufflenet_g8_w1 or weight_count == 913138)
-        assert (model != shufflenet_g1_w3d4 or weight_count == 546544)
-        assert (model != shufflenet_g3_w3d4 or weight_count == 524476)
-        assert (model != shufflenet_g1_wd2 or weight_count == 248374)
-        assert (model != shufflenet_g3_wd2 or weight_count == 242134)
-        assert (model != shufflenet_g1_wd4 or weight_count == 66196)
-        assert (model != shufflenet_g3_wd4 or weight_count == 67312)
+        assert (model != shufflenet_g1_w1 or weight_count == 1531936)
+        assert (model != shufflenet_g2_w1 or weight_count == 1733848)
+        assert (model != shufflenet_g3_w1 or weight_count == 1865728)
+        assert (model != shufflenet_g4_w1 or weight_count == 1968344)
+        assert (model != shufflenet_g8_w1 or weight_count == 2434768)
+        assert (model != shufflenet_g1_w3d4 or weight_count == 975214)
+        assert (model != shufflenet_g3_w3d4 or weight_count == 1238266)
+        assert (model != shufflenet_g1_wd2 or weight_count == 534484)
+        assert (model != shufflenet_g3_wd2 or weight_count == 718324)
+        assert (model != shufflenet_g1_wd4 or weight_count == 209746)
+        assert (model != shufflenet_g3_wd4 or weight_count == 305902)
 
         x = torch.randn(1, 3, 224, 224)
         y = net(x)
         y.sum().backward()
-        assert (tuple(y.size()) == (1, 10))
+        assert (tuple(y.size()) == (1, 1000))
 
 if __name__ == "__main__":
     _test()

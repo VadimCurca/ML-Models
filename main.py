@@ -59,7 +59,7 @@ def print_net(net, input_shape):
 if __name__ == '__main__':
     print("Hi pycharm")
 
-    net = shufflenet_g8_w1()
+    net = shufflenet_g3_wd2(num_classes=10)
 
     X = torch.rand(1, 3, 224, 224)
 
