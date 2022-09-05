@@ -3,6 +3,7 @@ from torchvision import transforms
 from torchsummary import summary
 
 from src.model import *
+from src.model import get_shufflenet
 from src.nn_utils import *
 
 def load_fake_data(batch_size, resize=None):
@@ -59,7 +60,7 @@ def print_net(net, input_shape):
 if __name__ == '__main__':
     print("Hi pycharm")
 
-    net = shufflenet_g3_wd2(num_classes=10)
+    net = get_shufflenet(num_classes=10, groups=8, width_scale=1.0, model_name="shufflenet_g1_w1")
 
     X = torch.rand(1, 3, 224, 224)
 
