@@ -12,7 +12,7 @@ from torchvision.models.detection.backbone_utils import _resnet_fpn_extractor, _
 import torch.nn.functional as F
 from .anchor_utils import AnchorGenerator
 from torchvision.models.detection.generalized_rcnn import GeneralizedRCNN
-from torchvision.models.detection.roi_heads import RoIHeads
+from .roi_heads import RoIHeads
 from .rpn import RPNHead, RegionProposalNetwork
 from torchvision.models.detection.transform import GeneralizedRCNNTransform
 
