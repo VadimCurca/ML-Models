@@ -1,4 +1,5 @@
 .idea
 *.onnx
 __pycache__
+nets-dump*
 

@@ -2,6 +2,7 @@ import math
 
 import torch
 import torch.nn.functional as F
+import numpy as np
 
 
 class Transformer:
@@ -33,7 +34,7 @@ class Transformer:
         max_size = float(max(image.shape[-2:]))
         
         scale_factor = min(self.min_size / min_size, self.max_size / max_size)
-        size = [round(s * scale_factor) for s in ori_image_shape]
+        size = [int(np.round(s * scale_factor)) for s in ori_image_shape]
         image = F.interpolate(image[None], size=size, mode='bilinear', align_corners=False)[0]
 
         if target is None:
