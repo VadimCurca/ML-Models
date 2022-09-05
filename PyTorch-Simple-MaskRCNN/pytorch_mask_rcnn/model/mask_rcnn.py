@@ -14,7 +14,7 @@ from .anchor_utils import AnchorGenerator
 from torchvision.models.detection.generalized_rcnn import GeneralizedRCNN
 from .roi_heads import RoIHeads
 from .rpn import RPNHead, RegionProposalNetwork
-from torchvision.models.detection.transform import GeneralizedRCNNTransform
+from .transform import GeneralizedRCNNTransform
 
 __all__ = [
     "MaskRCNN",
