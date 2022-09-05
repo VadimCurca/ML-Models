@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from torch import nn
+import torch.nn.functional as F
 from torchvision.ops import MultiScaleRoIAlign
 
 from torchvision._internally_replaced_utils import load_state_dict_from_url
@@ -9,9 +10,8 @@ from torchvision.models.resnet import resnet50
 from torchvision.models.detection._utils import overwrite_eps
 from torchvision.models.detection.backbone_utils import _resnet_fpn_extractor, _validate_trainable_layers
 
-import torch.nn.functional as F
 from .anchor_utils import AnchorGenerator
-from torchvision.models.detection.generalized_rcnn import GeneralizedRCNN
+from .generalized_rcnn import GeneralizedRCNN
 from .roi_heads import RoIHeads
 from .rpn import RPNHead, RegionProposalNetwork
 from .transform import GeneralizedRCNNTransform
