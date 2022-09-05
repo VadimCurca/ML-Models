@@ -18,3 +18,4 @@ if __name__ == '__main__':
     X = torch.rand(1, 3, 224, 224)
     X = net(X)
     print(net.__class__.__name__, 'output shape:\t', X.shape)
+    assert (tuple(X.size()) == (1, 10))
