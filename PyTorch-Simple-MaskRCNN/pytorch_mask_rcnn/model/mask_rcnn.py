@@ -10,10 +10,10 @@ from torchvision.models.detection._utils import overwrite_eps
 from torchvision.models.detection.backbone_utils import _resnet_fpn_extractor, _validate_trainable_layers
 
 import torch.nn.functional as F
-from torchvision.models.detection.anchor_utils import AnchorGenerator
+from .anchor_utils import AnchorGenerator
 from torchvision.models.detection.generalized_rcnn import GeneralizedRCNN
 from torchvision.models.detection.roi_heads import RoIHeads
-from torchvision.models.detection.rpn import RPNHead, RegionProposalNetwork
+from .rpn import RPNHead, RegionProposalNetwork
 from torchvision.models.detection.transform import GeneralizedRCNNTransform
 
 __all__ = [
@@ -242,6 +242,7 @@ class MaskRCNN(GeneralizedRCNN):
         mask_dim_reduced = 256
         mask_predictor = MaskRCNNPredictor(mask_predictor_in_channels, mask_dim_reduced, num_classes)
 
+        # -------------------- RoIHeads --------------------
         roi_heads = RoIHeads(
             # Box
             box_roi_pool,
@@ -263,10 +264,12 @@ class MaskRCNN(GeneralizedRCNN):
             mask_predictor
         )
 
+        # -------------------- Transform --------------------
         image_mean = [0.485, 0.456, 0.406]
         image_std = [0.229, 0.224, 0.225]
         transform = GeneralizedRCNNTransform(min_size, max_size, image_mean, image_std)
 
+        # -------------------- GeneralizedRCNN--------------------
         super().__init__(backbone, rpn, roi_heads, transform)
 
 
