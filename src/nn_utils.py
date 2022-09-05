@@ -2,8 +2,24 @@ import torch
 from torch import nn
 import matplotlib.pyplot as plt
 
+import onnx
+from onnx import shape_inference
+from onnxsim import simplify
+
 torch.manual_seed(42)
 torch.backends.cudnn.deterministic = True
+
+
+def export_onnx(net, dummy_input, filename="default"):
+    torch.onnx.export(net, dummy_input, filename + ".onnx", input_names=['input'], output_names=['output'])
+    net = onnx.load(filename + ".onnx")
+
+    net = shape_inference.infer_shapes(net)
+
+    model_simp, check = simplify(net)
+    assert check, "Simplified ONNX model could not be validated"
+
+    onnx.save(model_simp, filename + "_simplified.onnx")
 
 
 def evaluate_accuracy(net, data_iter, loss, device):

@@ -1,3 +1,4 @@
 .idea
+*.onnx
 __pycache__
 
