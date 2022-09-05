@@ -1,30 +1,9 @@
 import torch
 from torch import nn
-import torchvision
-from torchvision import transforms
 import matplotlib.pyplot as plt
 
 torch.manual_seed(42)
 torch.backends.cudnn.deterministic = True
-
-
-
-def load_fake_data(batch_size, resize=None):
-    """Download the FakeData dataset and then load it into memory."""
-    trans = [transforms.ToTensor()]
-    if resize:
-        trans.insert(0, transforms.Resize(resize))
-    trans = transforms.Compose(trans)
-    fakeData_train = torchvision.datasets.FakeData(60000, image_size=(3, 224, 224), num_classes=10, transform=trans)
-    fakeData_test = torchvision.datasets.FakeData(10000, image_size=(3, 224, 224), num_classes=10, transform=trans)
-    fakeData_train, fakeData_val = torch.utils.data.random_split(fakeData_train, [50000, 10000],
-                                                                 generator=torch.Generator().manual_seed(42))
-    return (torch.utils.data.DataLoader(fakeData_train, batch_size, shuffle=True,
-                                        num_workers=2),
-            torch.utils.data.DataLoader(fakeData_val, batch_size, shuffle=False,
-                                        num_workers=2),
-            torch.utils.data.DataLoader(fakeData_test, batch_size, shuffle=False,
-                                        num_workers=2))
 
 
 def evaluate_accuracy(net, data_iter, loss, device):
