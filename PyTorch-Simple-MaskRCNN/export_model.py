@@ -64,7 +64,7 @@ def export_local_model(args):
     d_test = pmr.datasets(args.dataset, args.data_dir, "val2017", train=True)
 
     num_classes = max(d_test.classes) + 1
-    model = pmr.maskrcnn_resnet50(True, num_classes).to(device)
+    model = pmr.maskrcnn_resnet50_fpn(True, num_classes).to(device)
     model.eval()
 
     dummy_input = torch.rand((3, 426, 640))

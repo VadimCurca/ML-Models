@@ -22,7 +22,7 @@ def main(args):
 
     print(args)
     num_classes = max(d_test.classes) + 1
-    model = pmr.maskrcnn_resnet50(True, num_classes).to(device)
+    model = pmr.maskrcnn_resnet50_fpn(True, num_classes=num_classes).to(device)
     model.eval()
 
     
@@ -31,8 +31,11 @@ def main(args):
     for i, (image, target) in enumerate(d_test):
         if i < args.index:
             continue
+
+        image = torch.unsqueeze(image, dim=0)
         
         output = model(image)
+        output = output[0]
 
         boxes = output["boxes"]
         masks = output["masks"]
@@ -53,12 +56,13 @@ def main(args):
         if(len(scores.tolist()) == 0):
             continue
 
-
         labels_name = d_test.get_class_name(labels.tolist())
-        print(labels)
         print(labels_name)
 
-        img = image.mul(255).add(0.5).clamp(0, 255).to('cpu', torch.uint8)
+        img = torch.squeeze(image, dim=0)
+        masks = torch.squeeze(masks, dim=1)
+
+        img = img.mul(255).add(0.5).clamp(0, 255).to('cpu', torch.uint8)
         masks = masks > 0.5
 
         img = torchvision.utils.draw_bounding_boxes(img, boxes, labels=labels_name, font_size=100)
