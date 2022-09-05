@@ -191,26 +191,19 @@ class MaskRCNN(FasterRCNN):
         mask_predictor=None,
     ):
 
-        assert isinstance(mask_roi_pool, (MultiScaleRoIAlign, type(None)))
-
-        if num_classes is not None:
-            if mask_predictor is not None:
-                raise ValueError("num_classes should be None when mask_predictor is specified")
-
         out_channels = backbone.out_channels
 
-        if mask_roi_pool is None:
-            mask_roi_pool = MultiScaleRoIAlign(featmap_names=["0", "1", "2", "3"], output_size=14, sampling_ratio=2)
+        # https://pytorch.org/vision/main/generated/torchvision.ops.MultiScaleRoIAlign.html
+        # https://pytorch.org/vision/stable/generated/torchvision.ops.roi_align.html
+        mask_roi_pool = MultiScaleRoIAlign(featmap_names=["0", "1", "2", "3"], output_size=14, sampling_ratio=2)
 
-        if mask_head is None:
-            mask_layers = (256, 256, 256, 256)
-            mask_dilation = 1
-            mask_head = MaskRCNNHeads(out_channels, mask_layers, mask_dilation)
+        mask_layers = (256, 256, 256, 256)
+        mask_dilation = 1
+        mask_head = MaskRCNNHeads(out_channels, mask_layers, mask_dilation)
 
-        if mask_predictor is None:
-            mask_predictor_in_channels = 256  # == mask_layers[-1]
-            mask_dim_reduced = 256
-            mask_predictor = MaskRCNNPredictor(mask_predictor_in_channels, mask_dim_reduced, num_classes)
+        mask_predictor_in_channels = mask_layers[-1] # == 256
+        mask_dim_reduced = 256
+        mask_predictor = MaskRCNNPredictor(mask_predictor_in_channels, mask_dim_reduced, num_classes)
 
         super().__init__(
             backbone,
@@ -368,8 +361,15 @@ def maskrcnn_resnet50_fpn(
         # no need to download the backbone if pretrained is set
         pretrained_backbone = False
 
+    # The reason why we use FrozenBatchNorm2d instead of BatchNorm2d is that the sizes of the batches are very small,
+    # which makes the batch statistics very poor and degrades performance.
+    # Plus, when using multiple GPUs, the batch statistics are not accumulated from multiple devices, so that only a
+    # single GPU compute the statistics.
+    # https://github.com/facebookresearch/maskrcnn-benchmark/issues/267
+
     backbone = resnet50(pretrained=pretrained_backbone, progress=progress, norm_layer=misc_nn_ops.FrozenBatchNorm2d)
     backbone = _resnet_fpn_extractor(backbone, trainable_backbone_layers)
+
     model = MaskRCNN(backbone, num_classes, **kwargs)
     if pretrained:
         state_dict = load_state_dict_from_url(model_urls["maskrcnn_resnet50_fpn_coco"], progress=progress)
