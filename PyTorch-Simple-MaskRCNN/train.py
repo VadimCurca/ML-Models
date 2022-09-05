@@ -32,7 +32,7 @@ def main(args):
 
     print(args)
     num_classes = max(d_train.dataset.classes) + 1 # including background class
-    model = pmr.maskrcnn_resnet50(True, num_classes).to(device)
+    model = pmr.maskrcnn_resnet50_fpn(False, num_classes).to(device)
     
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(

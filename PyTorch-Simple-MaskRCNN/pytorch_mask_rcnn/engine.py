@@ -33,6 +33,9 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, args):
         target = {k: v.to(device) for k, v in target.items()}
         S = time.time()
         
+        target = [target]
+        image = [image]
+
         losses = model(image, target)
         total_loss = sum(losses.values())
         m_m.update(time.time() - S)
@@ -99,11 +102,17 @@ def generate_results(model, data_loader, device, args):
         image = image.to(device)
         target = {k: v.to(device) for k, v in target.items()}
 
+        image = [image]
+        target = [target]
+
         S = time.time()
         #torch.cuda.synchronize()
         output = model(image)
         m_m.update(time.time() - S)
-        
+
+        output = output[0]
+        target = target[0]
+
         prediction = {target["image_id"].item(): {k: v.cpu() for k, v in output.items()}}
         coco_results.extend(prepare_for_coco(prediction))
 

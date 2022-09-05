@@ -79,7 +79,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="coco")
     parser.add_argument("--data-dir", default="/home/cvadim/fiftyone/coco-2017")
-    parser.add_argument("--ckpt-path", default="/home/cvadim/PycharmProjects/ml-models/PyTorch-Simple-MaskRCNN/assets/maskrcnn_resnet50_fpn_coco-bf2d0c1e.pth")
     parser.add_argument("--index", type=int, default=7)
     parser.add_argument("--iters", type=int, default=2)
     args = parser.parse_args()

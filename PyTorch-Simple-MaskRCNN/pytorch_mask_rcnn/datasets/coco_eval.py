@@ -63,6 +63,7 @@ def prepare_for_coco(predictions):
         scores = prediction["scores"].tolist()
         labels = prediction["labels"].tolist()
 
+        masks = torch.squeeze(masks, dim=1)
         masks = masks > 0.5
         rles = [
             mask_util.encode(np.array(mask[:, :, np.newaxis], dtype=np.uint8, order="F"))[0]
