@@ -6,11 +6,19 @@ import onnx
 from onnx import shape_inference
 from onnxsim import simplify
 
+import os
+
 torch.manual_seed(42)
 torch.backends.cudnn.deterministic = True
 
 
 def export_onnx(net, dummy_input, filename="default"):
+    path = os.path.join(".", "nets-dump")
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    filename = os.path.join(path, filename)
+
     torch.onnx.export(net, dummy_input, filename + ".onnx", input_names=['input'], output_names=['output'])
     net = onnx.load(filename + ".onnx")
 
